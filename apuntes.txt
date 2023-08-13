@@ -1,6 +1,0 @@
-api : https://api.spacexdata.com/v3/launches
-
-se utiliza para el estilo chakra UI link : https://chakra-ui.com/
-npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion  --> instalación
-npm i date-fns  ---> instalación sirve para las fechas  página dat-fns.org
-npm install dayjs  --> instalación sirve para fechas
