@@ -1,21 +1,75 @@
-const API_URL = "https://api.spacexdata.com/v3";
+import { useEffect, useState } from "react";
 
-export async function getAllLaunches() {
-  try {
-    const response = await fetch(`${API_URL}/launches`);
-    const data = response.json(); 
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
+export function GetAllLaunches(API_URL) {
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [controller, setController] = useState(null);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    setController(abortController);
+    setLoading(false);
+    fetch(`${API_URL}/launches`, { signal: abortController.signal })
+      .then(response => response.json())
+      .then(res => setData(res))
+      .catch(error => {
+        if (error.name === 'AbortError') {
+          console.log('Request cancelled')
+        } else {
+          setError(error)
+        }
+      })
+      .finally(() => setLoading(false));
+    return () => abortController.abort();
+  }, []);
+
+  const handleCancelRequest = () => {
+    if (controller) {
+      controller.abort();
+      setError('Request Cancelled')
+    }
+  };
+
+  return { data, loading, error, handleCancelRequest };
 }
 
-export async function getLauncheByFlightNumber(flightNumber) {
-  try {
-    const response = await fetch(`${API_URL}/launches/${flightNumber}`);
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
+
+const API_URL = "https://api.spacexdata.com/v3";
+
+export async function GetLauncheByFlightNumber(flightNumber) {
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [controller, setController] = useState(null);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    setController(abortController);
+    setLoading(false);
+    fetch(`${API_URL}/launches/${flightNumber}`, { signal: abortController.signal })
+      .then(response => response.json())
+      .then(res => setData(res))
+      .catch(error => {
+        if (error.name === 'AbortError') {
+          console.log('Request cancelled')
+        } else {
+          setError(error)
+        }
+      })
+      .finally(() => setLoading(false));
+    return () => abortController.abort();
+  }, []);
+
+  const handleCancelRequest = () => {
+    if (controller) {
+      controller.abort();
+      setError('Request Cancelled')
+    }
+  };
+
+  return { data, loading, error, handleCancelRequest };
+
 }
